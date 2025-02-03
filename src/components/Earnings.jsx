@@ -1,83 +1,120 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
-import Earnings from "components/Earnings";
-import Navbar from "./Navbar";
-import Streams from "components/Streams";
-import TargetAudience from "./TargetAudience";
-import TopReleases from "./TopReleases";
-import scrollreveal from "scrollreveal";
-function Dashboard() {
-  useEffect(() => {
-    const sr = scrollreveal({
-      origin: "bottom",
-      distance: "80px",
-      duration: 2000,
-      reset: false,
-    });
-    sr.reveal(
-      `
-        nav,
-        .row,
-        .row2
-    `,
-      {
-        opacity: 0,
-        interval: 100,
-      }
-    );
-  }, []);
+import { applyCardStyles } from "components/ReusableStyles";
+
+function Earnings() {
+  const earningsData = [
+    {
+      progress: 45,
+      amount: 3125,
+    },
+    {
+      progress: 55,
+      amount: 2731,
+    },
+    {
+      progress: 65,
+      amount: 1315,
+    },
+    {
+      progress: 100,
+      amount: 1012,
+    },
+  ];
   return (
     <Section>
-      <Navbar />
-      <div className="grid">
-        <div className="row">
-          <Streams />
-          <Earnings />
+      <div className="title-container">
+        <div className="title">
+          <h4>Earnings</h4>
+          <h1>$7,850</h1>
         </div>
-        <div className="row2">
-          <TargetAudience />
-          <TopReleases />
-        </div>
+        <span className="more">Show More</span>
+      </div>
+      <div className="earnings">
+        {earningsData.map(({ progress, amount }) => {
+          return (
+            <div className="earning" key={amount}>
+              <div className="data">
+                <h5>{progress === 100 ? "FUNDS CLEARED" : "CLEARNING"}</h5>
+                <h5 className="amount">$ {amount}</h5>
+              </div>
+              <progress
+                max={100}
+                value={progress}
+                className={progress === 100 ? "cleared" : ""}
+              />
+            </div>
+          );
+        })}
       </div>
     </Section>
   );
 }
 
 const Section = styled.section`
-  height: 100%;
-  width: 100%;
-  background-color: rgba(3, 3, 27, 0.7);
-
-  .grid {
-    padding: 2rem;
-    padding-top: 0;
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 1rem;
-    .row {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 1rem;
+  ${applyCardStyles}
+  color:white;
+  display: flex;
+  flex-direction: column;
+  .title-container {
+    display: flex;
+    justify-content: space-between;
+    .title {
+      h1 {
+        font-size: 2rem;
+        letter-spacing: 0.2rem;
+      }
     }
-    .row2 {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 1rem;
+    .more {
+      color: var(--primary-color);
+    }
+  }
+  .earnings {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    .earning {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      .data {
+        display: flex;
+        justify-content: space-between;
+        h5 {
+          font-weight: 100;
+        }
+      }
+      progress {
+        width: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        &::-webkit-progress-bar {
+          border-radius: 1rem;
+          height: 0.15rem;
+        }
+        &::-webkit-progress-value {
+          border-radius: 1rem;
+          background-color: orange;
+        }
+      }
+      .cleared {
+        &::-webkit-progress-value {
+          background-color: var(--primary-color);
+        }
+      }
     }
   }
   @media screen and (min-width: 280px) and (max-width: 1080px) {
-    height: max-content;
-    .grid {
-      grid-template-columns: 1fr;
-      padding: 1rem;
-      height: max-content;
-      .row,
-      .row2 {
-        /* height: max-content; */
-        grid-template-columns: 1fr;
-      }
+    height: 100%;
+    .title-container {
+      flex-direction: column;
+      text-align: center;
+    }
+    .earnings {
     }
   }
 `;
 
-export default Dashboard;
+export default Earnings;
